@@ -2,22 +2,34 @@
 User related functionality
 """
 
-from src.models.base import Base
+from src.models.base import Base, db
+from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(Base):
     """User representation"""
+    __tablename__ = 'users'
 
-    email: str
-    first_name: str
-    last_name: str
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email = Column(String(120), unique=True, nullable=False)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    password_hash = Column(String(128), nullable=False)
+    is_admin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self, email: str, first_name: str, last_name: str, **kw):
+    def __init__(self, email: str, first_name: str, last_name: str, password: str, **kw):
         """Dummy init"""
-        super().__init__(**kw)
+        super().__init__(**kwargs)
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        self.password_hash = generate_password_hash(password)
 
     def __repr__(self) -> str:
         """Dummy repr"""
@@ -26,7 +38,7 @@ class User(Base):
     def to_dict(self) -> dict:
         """Dictionary representation of the object"""
         return {
-            "id": self.id,
+            "id": str(self.id),
             "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -34,30 +46,31 @@ class User(Base):
             "updated_at": self.updated_at.isoformat(),
         }
 
+    def verify_password(self, password: str) -> bool:
+        """Verify the password"""
+        return check_password_hash(self.password_hash, password)
+    
     @staticmethod
-    def create(user: dict) -> "User":
+    def create(user_data: dict) -> "User":
         """Create a new user"""
-        from src.persistence import repo
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository()
 
-        users: list["User"] = User.get_all()
+        if User.query.filter_by(email=user_data["email"]).filter():
+            raise ValueError("User already exists")
 
-        for u in users:
-            if u.email == user["email"]:
-                raise ValueError("User already exists")
-
-        new_user = User(**user)
-
+        new_user = User(**user_data)
         repo.save(new_user)
-
         return new_user
 
     @staticmethod
     def update(user_id: str, data: dict) -> "User | None":
         """Update an existing user"""
-        from src.persistence import repo
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository
 
-        user: User | None = User.get(user_id)
 
+        user = User.query.get(user_id)
         if not user:
             return None
 
@@ -67,7 +80,8 @@ class User(Base):
             user.first_name = data["first_name"]
         if "last_name" in data:
             user.last_name = data["last_name"]
+        if "password" in data:
+            user.password_hash = generate_password_hash(data["password"])
 
         repo.update(user)
-
         return user

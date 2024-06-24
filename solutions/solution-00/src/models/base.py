@@ -4,62 +4,48 @@ from datetime import datetime
 from typing import Any, Optional
 import uuid
 from abc import ABC, abstractmethod
+from flask_sqlalchemy import SQLAlchemy
 
+db =  SQLAlchemy()
 
-class Base(ABC):
+class Base(db.Model, ABC):
     """
-    Base Interface for all models
+    Base Interface for all models using SQLAlchemy
     """
+    __abstract__ = True
+    
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    id: str
-    created_at: datetime
-    updated_at: datetime
-
-    def __init__(
-        self,
-        id: Optional[str] = None,
-        created_at: Optional[datetime] = None,
-        updated_at: Optional[datetime] = None,
-        **kwargs,
-    ) -> None:
+    
+    def __init__(self, **kwargs) -> None:
         """
         Base class constructor
         If kwargs are provided, set them as attributes
         """
-
-        if kwargs:
-            for key, value in kwargs.items():
-                if hasattr(self, key):
-                    continue
-                setattr(self, key, value)
-
-        self.id = str(id or uuid.uuid4())
-        self.created_at = created_at or datetime.now()
-        self.updated_at = updated_at or datetime.now()
+        super().__init__(**kwargs)
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                continue
+            setattr(self, key, value)
 
     @classmethod
-    def get(cls, id) -> "Any | None":
-        """
-        This is a common method to get an specific object
-        of a class by its id
-
-        If a class needs a different implementation,
-        it should override this method
-        """
-        from src.persistence import repo
-
+    def get(cls, id) -> Optional["Base"]:
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository()
         return repo.get(cls.__name__.lower(), id)
 
     @classmethod
-    def get_all(cls) -> list["Any"]:
+    def get_all(cls) -> list["Base"]:
         """
         This is a common method to get all objects of a class
 
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
-
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository()
         return repo.get_all(cls.__name__.lower())
 
     @classmethod
@@ -71,8 +57,8 @@ class Base(ABC):
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
-
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository()
         obj = cls.get(id)
 
         if not obj:
@@ -83,13 +69,16 @@ class Base(ABC):
     @abstractmethod
     def to_dict(self) -> dict:
         """Returns the dictionary representation of the object"""
+        pass
 
     @staticmethod
     @abstractmethod
     def create(data: dict) -> Any:
         """Creates a new object of the class"""
+        pass
 
     @staticmethod
     @abstractmethod
-    def update(entity_id: str, data: dict) -> Any | None:
+    def update(entity_id: str, data: dict) -> Any:
         """Updates an object of the class"""
+        pass
