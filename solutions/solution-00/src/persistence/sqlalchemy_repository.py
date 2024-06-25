@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 from src.models.base import db
+from src.persistence.repository import Repository
 
 DATABASE_URL = 'sqlite:///development.db'
 
@@ -23,7 +24,7 @@ def session_scope():
     finally:
         session.close()
 
-class SQLAlchemyRepository:
+class SQLAlchemyRepository(Repository):
     """SQLAlchemy repository implentation"""
 
     def reload(self) -> None:
