@@ -3,6 +3,12 @@ Country related functionality
 """
 
 
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from src.models.base import Base, db
+import uuid
+
+
 class Country:
     """
     Country representation
@@ -11,14 +17,16 @@ class Country:
 
     This class is used to get and list countries
     """
+    __tablename__ = 'countries'
 
-    name: str
-    code: str
-    cities: list
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4))
+    name = Column(String(50), nullable=False)
+    code =  Column(String(3), unique=True, nullable=False)
+    cities = relationship("city", back_populates="country", cascade="all, delete-orphan")
 
-    def __init__(self, name: str, code: str, **kw) -> None:
+    def __init__(self, name: str, code: str, **kwargs) -> None:
         """Dummy init"""
-        super().__init__(**kw)
+        super().__init__(**kwargs)
         self.name = name
         self.code = code
 
@@ -29,18 +37,19 @@ class Country:
     def to_dict(self) -> dict:
         """Returns the dictionary representation of the country"""
         return {
+            "id": str(self.id),
             "name": self.name,
             "code": self.code,
+            "cities": [city.to_dict() for city in self.cities]
         }
 
     @staticmethod
     def get_all() -> list["Country"]:
         """Get all countries"""
-        from src.persistence import repo
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository()
 
-        countries: list["Country"] = repo.get_all("country")
-
-        return countries
+        return repo.get_all("country")
 
     @staticmethod
     def get(code: str) -> "Country | None":
@@ -53,10 +62,10 @@ class Country:
     @staticmethod
     def create(name: str, code: str) -> "Country":
         """Create a new country"""
-        from src.persistence import repo
+        from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
+        repo = SQLAlchemyRepository()
 
-        country = Country(name, code)
-
+        country = Country(name=name, code=code)
         repo.save(country)
 
         return country

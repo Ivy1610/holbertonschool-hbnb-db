@@ -6,6 +6,7 @@ from src.models.base import Base
 from src.models.country import Country
 
 
+
 class City(Base):
     """City representation"""
 

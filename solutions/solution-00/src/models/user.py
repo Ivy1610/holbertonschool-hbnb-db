@@ -6,7 +6,7 @@ from src.models.base import Base, db
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from datetime import datetime
+from datetime import DateTime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -20,8 +20,9 @@ class User(Base):
     last_name = Column(String(50), nullable=False)
     password_hash = Column(String(128), nullable=False)
     is_admin = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
 
     def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
         """Dummy init"""
