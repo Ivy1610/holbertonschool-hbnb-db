@@ -16,8 +16,8 @@ class Place(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(50), nullable=False)
-    description = Column(String, nullable=False)
-    address = Column(String, nullable=False)
+    description = Column(String(256), nullable=False)
+    address = Column(String(126), nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     host_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)

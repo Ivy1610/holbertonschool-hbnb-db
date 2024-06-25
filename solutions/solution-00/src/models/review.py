@@ -17,7 +17,7 @@ class Review(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     place_id = Column(UUID(as_uuid=True), ForeignKey('places.id'), nullable=False) 
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    comment = Column(String, nullable=False)
+    comment = Column(String(256), nullable=False)
     rating = Column(Float, nullable=False)
     created_at = Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
