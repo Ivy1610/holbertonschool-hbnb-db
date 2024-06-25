@@ -3,6 +3,7 @@ Flask-cors
 Flask-SQLAlchemy
 Flask-JWT-Extended
 SQLAlchemy
+MySQL
 Flask-Migrate
 werkzeug
 gunicorn

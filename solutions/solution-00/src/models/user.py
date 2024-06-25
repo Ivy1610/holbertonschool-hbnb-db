@@ -23,7 +23,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self, email: str, first_name: str, last_name: str, password: str, **kw):
+    def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
         """Dummy init"""
         super().__init__(**kwargs)
         self.email = email
