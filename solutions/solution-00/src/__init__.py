@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from src.config import Config
+import os
 
 cors = CORS()
 db = SQLAlchemy()

@@ -8,7 +8,9 @@ from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import DateTime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 
+db = SQLAlchemy()
 
 class User(Base):
     """User representation"""
@@ -22,7 +24,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     created_at = Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
-
+    
 
     def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
         """Dummy init"""
