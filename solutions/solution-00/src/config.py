@@ -80,3 +80,12 @@ class ProductionConfig(Config):
         "DATABASE_URL",
         "postgresql://user:password@localhost/hbnb_prod"
     )
+    
+
+    """Methode qui permet de basculer dynamiquement entre les 
+    configurations de développement et de production sans modifications de c    ode"""
+def get_config():
+    env = os.getenv('ENV', 'development')
+    if env == 'production':
+        return ProductionConfig
+    return DevelopmentConfig
