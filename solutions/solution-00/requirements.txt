@@ -2,6 +2,8 @@ Flask
 Flask-cors
 Flask-SQLAlchemy
 Flask-JWT-Extended
+python-dotenv
+psycopg2-binary
 SQLAlchemy
 MySQL
 Flask-Migrate

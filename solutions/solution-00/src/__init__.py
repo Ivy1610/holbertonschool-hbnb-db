@@ -1,10 +1,13 @@
-""" Initialize the Flask app. """
-
+import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from src.config import get_config
+from dotenv import load_dotenv
+
+load_dotenv()
 from src.config import Config
 import os
 
@@ -25,6 +28,15 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///development.db')
     app.config['USE_DATABASE'] = os.getenv('USE_DATABASE', False)
     db = SQLAlchemy(app)
+
+    app.config.from_object(get_config())
+    
+    db.init_app(app)
+    cors.init_app(app)
+    jwt.init_app(app)
+    migrate.init_app(app, db)
+    
+    # Register extensions, routes, handlers if any
 
     register_extensions(app)
     register_routes(app)
