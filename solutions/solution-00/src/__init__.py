@@ -22,6 +22,9 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     app.url_map.strict_slashes = False
 
     app.config.from_object(config_class)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///development.db')
+    app.config['USE_DATABASE'] = os.getenv('USE_DATABASE', False)
+    db = SQLAlchemy(app)
 
     register_extensions(app)
     register_routes(app)
