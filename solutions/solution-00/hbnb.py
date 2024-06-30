@@ -1,4 +1,3 @@
-from src.__init__ import create_app, db
 import os
 from flask import Flask
 from flask_cors import CORS
@@ -8,7 +7,14 @@ from flask_migrate import Migrate
 from src.config import get_config
 from dotenv import load_dotenv
 
-# Créez et configurez l'application Flask
+load_dotenv()
+
+# Déclaration des extensions
+cors = CORS()
+db = SQLAlchemy()
+jwt = JWTManager()
+migrate = Migrate()
+
 def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     """
     Create a Flask app with the given configuration class.
@@ -32,13 +38,24 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
 
     return app
 
-# Vérifiez si la base de données SQLite existe, sinon créez-la
-if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite:///'):
-    database_path = app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', '')
-    if not os.path.exists(database_path):
-        with app.app_context():
-            db.create_all()
+def register_extensions(app):
+    pass  # Ajoutez ici l'enregistrement des extensions
 
-if __name__ == '__main__':
-    app.run(debug=True)
+def register_routes(app):
+    pass  # Ajoutez ici l'enregistrement des routes
+
+def register_handlers(app):
+    pass  # Ajoutez ici l'enregistrement des gestionnaires d'erreurs
+
+if __name__ == "__main__":
+    app = create_app()
+
+    # Vérifiez si la base de données SQLite existe, sinon créez-la
+    if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite:///'):
+        database_path = app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', '')
+        if not os.path.exists(database_path):
+            with app.app_context():
+                db.create_all()
+
+    app.run(port=5001)
 
