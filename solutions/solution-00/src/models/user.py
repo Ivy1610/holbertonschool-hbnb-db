@@ -6,7 +6,7 @@ from src.models.base import Base, db
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from datetime import DateTime
+from datetime import dateTime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -14,7 +14,7 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-class User(Base):
+class User(db.Model):
     """User representation"""
     __tablename__ = 'users'
 
@@ -25,9 +25,6 @@ class User(Base):
     password_hash = db.Column(String(128), nullable=False)
     is_admin = db.Column(Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
-    
-
     def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
         """Dummy init"""
         super().__init__(**kwargs)

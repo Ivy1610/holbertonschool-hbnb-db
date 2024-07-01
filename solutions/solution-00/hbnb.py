@@ -6,8 +6,13 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from src.config import get_config
 from dotenv import load_dotenv
+from src.routes import main
 
-load_dotenv()
+# Charger le fichier .env approprié
+if os.getenv('FLASK_ENV') == 'production':
+    load_dotenv('.env.production')
+else:
+    load_dotenv('.env.development')
 
 cors = CORS()
 db = SQLAlchemy()
@@ -38,6 +43,9 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     register_routes(app)
     register_handlers(app)
 
+    @app.route('/')
+    def home():
+        return 'Hello, World!'
     return app
 
 def register_extensions(app):
@@ -59,4 +67,9 @@ if __name__ == '__main__':
             with app.app_context():
                 db.create_all()
 
+<<<<<<< HEAD
+    app.run(port=5006)
+
+=======
     app.run(debug=True, port=5002)
+>>>>>>> origin/main
