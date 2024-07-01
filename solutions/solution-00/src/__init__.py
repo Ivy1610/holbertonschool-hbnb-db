@@ -49,6 +49,7 @@ def register_extensions(app: Flask) -> None:
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+    pass
     # Further extensions can be added here
 
 
@@ -56,6 +57,8 @@ def register_routes(app: Flask) -> None:
     """Import and register the routes for the Flask app"""
 
     # Import the routes here to avoid circular imports
+    from src.routes.auth import auth_bp
+    from src.routes.protected import protected_bp
     from src.routes.users import users_bp
     from src.routes.countries import countries_bp
     from src.routes.cities import cities_bp
@@ -64,6 +67,8 @@ def register_routes(app: Flask) -> None:
     from src.routes.reviews import reviews_bp
 
     # Register the blueprints in the app
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(protected_bp, url_prefix='/api')
     app.register_blueprint(users_bp)
     app.register_blueprint(countries_bp)
     app.register_blueprint(cities_bp)
@@ -86,4 +91,4 @@ def register_handlers(app: Flask) -> None:
 
 if __name__ == '__main__':
     app = create_app()
-    app.run()
+    app.run(debug=True, port=5001)

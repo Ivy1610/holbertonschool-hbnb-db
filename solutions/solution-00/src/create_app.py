@@ -30,8 +30,4 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
 
     db = SQLAlchemy(app)
 
-    register_extensions(app)
-    register_routes(app)
-    register_handlers(app)
-
     return app

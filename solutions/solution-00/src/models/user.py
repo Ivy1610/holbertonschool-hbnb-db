@@ -9,8 +9,10 @@ import uuid
 from datetime import DateTime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 class User(Base):
     """User representation"""
@@ -48,10 +50,13 @@ class User(Base):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
+    
+    def set_password(self, password: str) -> bool:
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    def verify_password(self, password: str) -> bool:
+    def check_password(self, password: str) -> bool:
         """Verify the password"""
-        return check_password_hash(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
     
     @staticmethod
     def create(user_data: dict) -> "User":
@@ -84,7 +89,7 @@ class User(Base):
         if "last_name" in data:
             user.last_name = data["last_name"]
         if "password" in data:
-            user.password_hash = generate_password_hash(data["password"])
+            user.password_hash = bcrypt.generate_password_hash(data["password"])
 
         repo.update(user)
         return user
