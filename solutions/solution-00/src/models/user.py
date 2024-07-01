@@ -25,6 +25,8 @@ class User(db.Model):
     password_hash = db.Column(String(128), nullable=False)
     is_admin = db.Column(Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    
     def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
         """Dummy init"""
         super().__init__(**kwargs)
