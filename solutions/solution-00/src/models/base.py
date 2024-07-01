@@ -3,12 +3,14 @@
 from datetime import datetime
 from typing import Any, Optional
 import uuid
+from src.models.meta import Base
+from sqlalchemy import Column, Integer
 from abc import ABC, abstractmethod
 from flask_sqlalchemy import SQLAlchemy
 
 db =  SQLAlchemy()
 
-class Base(db.Model, ABC):
+class Base(Base, ABC):
     """
     Base Interface for all models using SQLAlchemy
     """
