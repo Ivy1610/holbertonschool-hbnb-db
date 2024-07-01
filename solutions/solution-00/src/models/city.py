@@ -17,7 +17,6 @@ class City(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4))
     name = Column(String(50), nullable=False)
     country_id = Column(String(36), ForeignKey('countries.id'), nullable=False)
-    country = relationship("Country", back_populates="cities")
     
     
     def __init__(self, name: str, country_id: str, **kwargs) -> None:
@@ -72,3 +71,5 @@ class City(Base):
         repo.update(city)
 
         return city
+
+Country.cities = relationship("city", order_by=City.id, back_populates="country")

@@ -19,8 +19,8 @@ class Country:
     """
     __tablename__ = 'countries'
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4))
-    name = Column(String(50), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4))
+    name = db.Column(String(50), nullable=False)
     code =  Column(String(3), unique=True, nullable=False)
     cities = relationship("city", back_populates="country", cascade="all, delete-orphan")
 
@@ -69,3 +69,5 @@ class Country:
         repo.save(country)
 
         return country
+
+Country.cities = relationship("city", back_populates="country")

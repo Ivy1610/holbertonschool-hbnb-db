@@ -7,6 +7,7 @@ from src.models.city import City
 from src.models.user import User
 from sqlalchemy import Column, String, Float, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 import uuid
 
 
@@ -14,20 +15,20 @@ class Place(Base):
     """Place representation"""
     __tablename__ = 'places'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String(50), nullable=False)
-    description = Column(String(256), nullable=False)
-    address = Column(String(126), nullable=False)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    host_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    city_id = Column(UUID(as_uuid=True), ForeignKey('cities.id'), nullable=False)
-    price_per_night = Column(Integer, nullable=False)
-    number_of_rooms = Column(Integer, nullable=False)
-    number_of_bathrooms = Column(Integer, nullable=False)
-    max_guests = Column(Integer, nullable=False)
-    created_at = Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = db.Column(String(50), nullable=False)
+    description = db.Column(String(256), nullable=False)
+    address = db.Column(String(126), nullable=False)
+    latitude = db.Column(Float, nullable=False)
+    longitude = db.Column(Float, nullable=False)
+    host_id = db.Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    city_id = db.Column(UUID(as_uuid=True), ForeignKey('cities.id'), nullable=False)
+    price_per_night = db.Column(Integer, nullable=False)
+    number_of_rooms = db.Column(Integer, nullable=False)
+    number_of_bathrooms = db.Column(Integer, nullable=False)
+    max_guests = db.Column(Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 
     def __init__(self, **kwargs):
@@ -104,3 +105,8 @@ class Place(Base):
         repo.update(place)
 
         return place
+
+User.places = relationship("Place", order_by=Place.id, back_populates="host")
+City.places = relationship("Place", order_by=Place.id, back_populates="city")
+Place.host = relationship("User", back_populates="places")
+Place.city = relationship("City", back_populates="places")

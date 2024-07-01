@@ -80,3 +80,6 @@ class Review(Base):
 
         repo.update(review)
         return review
+
+Review.place = db.relationship('Place', backref=db.backref('reviews', lasy=True))
+Review.user = db.relationship('User', backref=db.backref('reviews', lasy=True))

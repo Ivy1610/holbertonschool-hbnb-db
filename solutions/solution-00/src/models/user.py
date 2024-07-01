@@ -18,14 +18,14 @@ class User(Base):
     """User representation"""
     __tablename__ = 'users'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    email = Column(String(120), unique=True, nullable=False)
-    first_name = Column(String(50), nullable=False)
-    last_name = Column(String(50), nullable=False)
-    password_hash = Column(String(128), nullable=False)
-    is_admin = Column(Boolean, default=False)
-    created_at = Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email = db.Column(String(120), unique=True, nullable=False)
+    first_name = db.Column(String(50), nullable=False)
+    last_name = db.Column(String(50), nullable=False)
+    password_hash = db.Column(String(128), nullable=False)
+    is_admin = db.Column(Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
 
     def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
@@ -93,3 +93,6 @@ class User(Base):
 
         repo.update(user)
         return user
+
+from src.models.place import Place
+Place.host = db.relationship("User",  back_populates="places")

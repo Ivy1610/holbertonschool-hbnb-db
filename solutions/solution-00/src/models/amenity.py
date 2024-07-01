@@ -6,6 +6,7 @@ from src.models.base import Base, db
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from src.models.place import Place
 import uuid
 
 
@@ -13,8 +14,8 @@ class Amenity(Base):
     """Amenity representation"""
     __tablename__ = 'amenities'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False, unique=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = db.Column(String, nullable=False, unique=True)
 
     def __init__(self, name: str, **kwargs) -> None:
         """Dummy init"""
@@ -67,7 +68,7 @@ class PlaceAmenity(Base):
 
     __tablename__ = 'place_amenities'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     place_id = Column(UUID(as_uuid=True), ForeignKey('places.id'), nullable=False)
     amenity_id = Column(UUID(as_uuid=True), ForeignKey('amenities.id'), nullable=False)
 
@@ -137,3 +138,8 @@ class PlaceAmenity(Base):
         raise NotImplementedError(
             "This method is defined only because of the Base class"
         )
+    
+Amenity.plce_amenities = relationship("PlaceAmenity", back_populates="amenity")
+    
+PlaceAmenity.amenity = relationship("Amenity", back_populates="place_amenities")
+PlaceAmenity.place = relationship("Place", back_populates="place_amenities")

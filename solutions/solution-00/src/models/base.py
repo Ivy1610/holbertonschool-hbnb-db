@@ -15,8 +15,9 @@ class Base(db.Model, ABC):
     __abstract__ = True
     
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
 
     
     def __init__(self, **kwargs) -> None:
