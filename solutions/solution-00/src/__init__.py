@@ -8,8 +8,6 @@ from src.config import get_config
 from dotenv import load_dotenv
 
 load_dotenv()
-from src.config import Config
-import os
 
 cors = CORS()
 db = SQLAlchemy()
@@ -24,12 +22,12 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     app = Flask(__name__)
     app.url_map.strict_slashes = False
 
+    config_class = get_config()
     app.config.from_object(config_class)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///development.db')
     app.config['USE_DATABASE'] = os.getenv('USE_DATABASE', False)
     db = SQLAlchemy(app)
 
-    app.config.from_object(get_config())
     
     db.init_app(app)
     cors.init_app(app)
@@ -85,3 +83,7 @@ def register_handlers(app: Flask) -> None:
             {"error": "Bad request", "message": str(e)}, 400
         )
     )
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run()

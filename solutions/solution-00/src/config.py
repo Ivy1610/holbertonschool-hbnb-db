@@ -82,9 +82,9 @@ class ProductionConfig(Config):
     )
     
 
+def get_config():
     """Methode qui permet de basculer dynamiquement entre les 
     configurations de développement et de production sans modifications de code"""
-def get_config():
     env = os.getenv('ENV', 'development')
     if env == 'production':
         return ProductionConfig
