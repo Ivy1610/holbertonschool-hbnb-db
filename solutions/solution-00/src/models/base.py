@@ -7,10 +7,11 @@ from src.models.meta import Base
 from sqlalchemy import Column, Integer
 from abc import ABC, abstractmethod
 from flask_sqlalchemy import SQLAlchemy
+ 
 
 db =  SQLAlchemy()
 
-class Base(Base, ABC):
+class Base(db.Model, ABC):
     """
     Base Interface for all models using SQLAlchemy
     """
