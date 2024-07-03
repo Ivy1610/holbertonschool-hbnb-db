@@ -49,13 +49,26 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     return app
 
 def register_extensions(app):
-    pass  # Ajoutez ici l'enregistrement des extensions
+    # enregistrement des extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    cors.init_app(app)
+    jwt.init_app(app)
 
 def register_routes(app):
-    pass  # Ajoutez ici l'enregistrement des routes
+    # enregistrement des routes
+    from src.routes import main_routes
+    app.register_blueprint(main_routes)
 
 def register_handlers(app):
-    pass  # Ajoutez ici l'enregistrement des gestionnaires d'erreurs
+    # enregistrement des gestionnaires d'erreurs
+    @app.errorhandler(404)
+    def not_found_error(error):
+        return "Page not found", 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        return "Internal server error", 500
 
 if __name__ == '__main__':
     app = create_app()
