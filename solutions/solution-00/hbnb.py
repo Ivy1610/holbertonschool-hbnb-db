@@ -8,6 +8,7 @@ from src.config import get_config
 from dotenv import load_dotenv
 from src.routes import main
 
+
 # Charger le fichier .env approprié
 if os.getenv('FLASK_ENV') == 'production':
     load_dotenv('.env.production')
@@ -49,26 +50,34 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     return app
 
 def register_extensions(app):
-    # enregistrement des extensions
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
-    migrate.init_app(app, db)
-    cors.init_app(app)
     jwt.init_app(app)
+    migrate.init_app(app, db)
+    pass
 
 def register_routes(app):
-    # enregistrement des routes
-    from src.routes import main_routes
-    app.register_blueprint(main_routes)
+    from src.routes.auth import auth_bp
+    from src.routes.protected import protected_bp
+    from src.routes.users import users_bp
+    from src.routes.countries import countries_bp
+    from src.routes.cities import cities_bp
+    from src.routes.places import places_bp
+    from src.routes.amenities import amenities_bp
+    from src.routes.reviews import reviews_bp
+    pass 
 
 def register_handlers(app):
-    # enregistrement des gestionnaires d'erreurs
-    @app.errorhandler(404)
-    def not_found_error(error):
-        return "Page not found", 404
-
-    @app.errorhandler(500)
-    def internal_error(error):
-        return "Internal server error", 500
+    app.errorhandler(404)(lambda e: (
+        {"error": "Not found", "message": str(e)}, 404
+    )
+    )
+    app.errorhandler(400)(
+        lambda e: (
+            {"error": "Bad request", "message": str(e)}, 400
+        )
+    )
+    pass
 
 if __name__ == '__main__':
     app = create_app()

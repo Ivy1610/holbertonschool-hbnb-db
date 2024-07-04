@@ -24,13 +24,14 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
 
     config_class = get_config()
     app.config.from_object(config_class)
+
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///development.db')
     app.config['USE_DATABASE'] = os.getenv('USE_DATABASE', False)
     db = SQLAlchemy(app)
 
     
     db.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app, resources={r"/api/*": {"origins: "*""}})
     jwt.init_app(app)
     migrate.init_app(app, db)
     

@@ -2,7 +2,7 @@
 
 import requests
 import uuid
-
+from test import test_users
 from tests import test_functions
 
 API_URL = "http://localhost:5000"

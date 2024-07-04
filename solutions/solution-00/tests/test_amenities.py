@@ -3,7 +3,7 @@
 import requests
 import uuid
 
-from tests import test_functions
+from tests import test_amenities
 
 API_URL = "http://localhost:5000"
 
