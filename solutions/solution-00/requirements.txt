@@ -9,4 +9,3 @@ MySQL
 Flask-Migrate
 werkzeug
 gunicorn
-
