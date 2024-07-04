@@ -2,7 +2,7 @@
 Review related functionality
 """
 
-from src.models.base import Base, db
+from src.models.base import BaseModel, db
 from src.models.place import Place
 from src.models.user import User
 from sqlalchemy import Column, String, Float, ForeignKey
@@ -10,7 +10,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
 
-class Review(Base):
+class Review(BaseModel):
     """Review representation"""
     __tablename__ = 'reviews'
 

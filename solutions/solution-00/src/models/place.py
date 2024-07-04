@@ -2,7 +2,7 @@
 Place related functionality
 """
 
-from src.models.base import Base, db
+from src.models.base import BaseModel, db
 from src.models.city import City
 from src.models.user import User
 from sqlalchemy import Column, String, Float, Integer, ForeignKey
@@ -11,7 +11,7 @@ from sqlalchemy.orm import relationship
 import uuid
 
 
-class Place(Base):
+class Place(BaseModel):
     """Place representation"""
     __tablename__ = 'places'
 

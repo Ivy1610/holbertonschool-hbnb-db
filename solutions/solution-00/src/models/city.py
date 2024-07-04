@@ -2,20 +2,20 @@
 City related functionality
 """
 
-from src.models.base import Base, db
+from src.models.base import BaseModel, db
 from src.models.country import Country
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey
 import uuid
 
 
-class City(Base):
+class City(BaseModel):
     """City representation"""
 
     __tablename__ = 'cities'
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4))
-    name = Column(String(50), nullable=False)
+    id = db.Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4))
+    name = db.Column(String(50), nullable=False)
     country_id = Column(String(36), ForeignKey('countries.id'), nullable=False)
     
     

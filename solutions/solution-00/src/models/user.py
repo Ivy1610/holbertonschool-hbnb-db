@@ -2,7 +2,7 @@
 User related functionality
 """
 
-from src.models.base import Base, db
+from src.models.base import BaseModel, db
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -14,7 +14,7 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-class User(db.Model):
+class User(BaseModel):
     """User representation"""
     __tablename__ = 'users'
 
@@ -26,7 +26,7 @@ class User(db.Model):
     is_admin = db.Column(Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    
+
     def __init__(self, email: str, first_name: str, last_name: str, password: str, **kwargs):
         """Dummy init"""
         super().__init__(**kwargs)

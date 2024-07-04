@@ -5,7 +5,7 @@ Country related functionality
 
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from src.models.base import Base, db
+from src.models.base import BaseModel, db
 import uuid
 
 

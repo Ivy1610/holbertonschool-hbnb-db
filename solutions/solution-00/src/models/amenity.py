@@ -2,7 +2,7 @@
 Amenity related functionality
 """
 
-from src.models.base import Base, db
+from src.models.base import BaseModel, db
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -10,7 +10,7 @@ from src.models.place import Place
 import uuid
 
 
-class Amenity(Base):
+class Amenity(BaseModel):
     """Amenity representation"""
     __tablename__ = 'amenities'
 
@@ -63,7 +63,7 @@ class Amenity(Base):
         return amenity
 
 
-class PlaceAmenity(Base):
+class PlaceAmenity(BaseModel):
     """PlaceAmenity representation"""
 
     __tablename__ = 'place_amenities'

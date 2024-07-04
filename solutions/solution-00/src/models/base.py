@@ -3,15 +3,21 @@
 from datetime import datetime
 from typing import Any, Optional
 import uuid
-from src.models.meta import Base
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from flask_sqlalchemy import SQLAlchemy
  
 
 db =  SQLAlchemy()
 
-class Base(db.Model, ABC):
+
+class CustomMeta(ABCMeta, type(db.Model)):
+    pass
+
+Base = declarative_base(metaclass=CustomMeta)
+
+class BaseModel(Base):
     """
     Base Interface for all models using SQLAlchemy
     """
@@ -35,13 +41,13 @@ class Base(db.Model, ABC):
             setattr(self, key, value)
 
     @classmethod
-    def get(cls, id) -> Optional["Base"]:
+    def get(cls, id) -> Optional["BaseModel"]:
         from src.persistence.sqlalchemy_repository import SQLAlchemyRepository
         repo = SQLAlchemyRepository()
         return repo.get(cls.__name__.lower(), id)
 
     @classmethod
-    def get_all(cls) -> list["Base"]:
+    def get_all(cls) -> list["BaseModel"]:
         """
         This is a common method to get all objects of a class
 

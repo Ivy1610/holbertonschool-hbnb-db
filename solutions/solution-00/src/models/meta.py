@@ -1,9 +1,9 @@
 from sqlalchemy.ext.declarative import declarative_base
 from abc import ABCMeta
 
-Base = declarative_base()
 
-class CustomMeta(type(Base), ABCMeta):
+
+class CustomMeta(type(db.Model), ABCMeta):
     pass
 
-Base = declarative_base(metaclass=CustomMeta)
+BaseMeta = declarative_base(metaclass=CustomMeta)
