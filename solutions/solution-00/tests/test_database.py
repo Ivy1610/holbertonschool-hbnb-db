@@ -1,7 +1,8 @@
 import os
 import unittest
 from flask import Flask
-from src import create_app, db
+from src.create_app import create_app
+from src.persistence.db import db
 from src.models.user import User
 from dotenv import load_dotenv
 

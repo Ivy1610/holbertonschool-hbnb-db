@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
-db = SQLAlchemy()
+app = SQLAlchemy()
 bcrypt = Bcrypt()
 
 class User(BaseModel):
