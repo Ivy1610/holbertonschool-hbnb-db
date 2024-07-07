@@ -1,4 +1,4 @@
-# HBNB Solution Part 1
+# HBNB Solution Part 2
 
 This solution successfully implements the repository pattern.
 It passes the tests provided in the `/hbnb/part1/tests` directory.
