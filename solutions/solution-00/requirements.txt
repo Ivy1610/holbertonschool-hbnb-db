@@ -8,3 +8,4 @@ SQLAlchemy
 MySQL
 Flask-Migrate
 werkzeug
+gunicorn
