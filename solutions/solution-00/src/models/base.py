@@ -1,5 +1,5 @@
 """ Abstract base class for all models """
-
+from flash import Flask
 from datetime import datetime
 from typing import Any, Optional
 import uuid

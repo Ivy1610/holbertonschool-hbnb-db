@@ -12,7 +12,7 @@
     - reload (which can be empty)
 """
 
-from src.models.base import Base
+from src.models.base import BaseModel
 from src.persistence.repository import Repository
 
 
@@ -26,18 +26,18 @@ class DBRepository(Repository):
         """Not implemented"""
         return []
 
-    def get(self, model_name: str, obj_id: str) -> Base | None:
+    def get(self, model_name: str, obj_id: str) -> BaseModel | None:
         """Not implemented"""
 
     def reload(self) -> None:
         """Not implemented"""
 
-    def save(self, obj: Base) -> None:
+    def save(self, obj: BaseModel) -> None:
         """Not implemented"""
 
-    def update(self, obj: Base) -> Base | None:
+    def update(self, obj: BaseModel) -> BaseModel | None:
         """Not implemented"""
 
-    def delete(self, obj: Base) -> bool:
+    def delete(self, obj: BaseModel) -> bool:
         """Not implemented"""
         return False
